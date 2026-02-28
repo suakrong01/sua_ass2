@@ -1,0 +1,215 @@
+:root {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --primary-color: #38bdf8;
+    --accent-color: #818cf8;
+    --text-color: #f1f5f9;
+    --secondary-text: #94a3b8;
+    --danger-color: #f43f5e;
+    --chamber-height: 400px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.app-container {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+header h1 {
+    font-weight: 600;
+    background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--secondary-text);
+}
+
+.status-indicator.connected .status-dot {
+    background-color: #10b981;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.status-indicator.connected .status-text {
+    color: #10b981;
+}
+
+.status-indicator.disconnected .status-dot {
+    background-color: var(--danger-color);
+    box-shadow: 0 0 8px rgba(244, 63, 94, 0.6);
+}
+
+.status-indicator.disconnected .status-text {
+    color: var(--danger-color);
+}
+
+header p {
+    color: var(--secondary-text);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+/* Gravity Chamber */
+.gravity-chamber {
+    position: relative;
+    height: var(--chamber-height);
+    background: rgba(15, 23, 42, 0.5);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 2rem;
+    overflow: hidden;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.measuring-lines {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px 0;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.measuring-lines span {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.2);
+    font-family: monospace;
+}
+
+.floating-icon {
+    font-size: 3rem;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    /* Initial Top Position will be set by JS */
+    top: 10px;
+    transition: top 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), text-shadow 0.3s;
+    z-index: 20;
+    filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.5));
+}
+
+.floating-icon.falling {
+    filter: drop-shadow(0 0 5px rgba(244, 63, 94, 0.5)) grayscale(0.5);
+}
+
+.ground-level {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: linear-gradient(to right, var(--danger-color), #fb7185);
+    opacity: 0.3;
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
+.status-display {
+    font-size: 1.2rem;
+    color: var(--secondary-text);
+}
+
+#moisture-text {
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.water-button {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+}
+
+.water-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.6);
+}
+
+.water-button:active {
+    transform: translateY(1px);
+}
+
+/* Animations */
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateX(-50%) translateY(0);
+    }
+
+    50% {
+        transform: translateX(-50%) translateY(-10px);
+    }
+}
+
+.floating-icon:not(.falling) {
+    animation: float 3s ease-in-out infinite;
+}
